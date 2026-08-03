@@ -1,0 +1,775 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#2e7d32">
+    <title>Register - Kabutomate</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #4caf50;
+            --accent-orange: #ff7043;
+            --dark-text: #1a202c;
+            --light-text: #a0aec0;
+            --bg-gray: #f0f4f1;
+
+            /* Design tokens (match Login) */
+            --form-bg: #ffffff;
+            --input-bg: #f7faf7;
+            --input-border: #d4e2d5;
+            --input-focus: var(--primary-green);
+            --card-shadow: 0 24px 64px rgba(46,125,50,0.10), 0 4px 16px rgba(0,0,0,0.06);
+            --radius-input: 12px;
+            --radius-card: 28px;
+        }
+
+        * {
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        html, body { height: 100%; }
+        html, body { margin: 0; font-family: 'DM Sans', sans-serif; }
+        body { display: flex; background-color: var(--bg-gray); min-height: 100vh; }
+
+        /* --- Left Side (Registration Form) --- */
+        .split-left {
+            width: 50%;
+            height: 100%;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .register-wrapper {
+            width: 100%;
+            max-width: 420px;
+            background: var(--form-bg);
+            border-radius: var(--radius-card);
+            padding: 44px 40px 40px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            animation: slideUpFade 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            border: 1px solid rgba(46,125,50,0.07);
+            margin: auto;
+        }
+
+        /* Top accent bar like login card */
+        .register-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 32px; right: 32px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--light-green), var(--primary-green), var(--accent-orange));
+            border-radius: 0 0 6px 6px;
+        }
+
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-text { margin-bottom: 28px; margin-top: 4px; text-align: left; }
+
+        .form-brand { display:flex; align-items:center; gap:10px; margin-bottom:20px; }
+        .form-brand-icon { width:38px; height:38px; background: linear-gradient(135deg, var(--light-green), var(--primary-green)); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+        .form-brand-name { font-family: 'DM Serif Display', serif; font-size:1.05rem; color: var(--primary-green); letter-spacing:0.04em; }
+
+        .header-text h1 { font-family: 'DM Serif Display', serif; font-size:2rem; font-weight:400; color:var(--dark-text); margin-bottom:8px; }
+        .header-text p { color: var(--light-text); font-size:0.9rem; }
+
+        .header-text h1 {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin: 0 0 10px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .header-text p {
+            color: var(--light-text);
+            margin: 0;
+            font-size: 0.95em;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: var(--dark-text);
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .input-container .field-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#b0bec5; font-size:0.95rem; transition: color 0.25s; pointer-events:none; z-index:1; }
+
+        .input-container input,
+        .input-container textarea {
+            width: 100%; padding: 13px 14px 13px 42px;
+            border: 1.5px solid var(--input-border); border-radius: var(--radius-input);
+            font-size: 0.95rem; font-family: 'DM Sans', sans-serif; color: var(--dark-text);
+            background: var(--input-bg); transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+        }
+
+        .input-container input::placeholder { color: #c0ccc1; }
+        
+        /* Password input needs extra right padding for eye icon */
+        .input-container:has(.password-toggle) input {
+            padding-right: 50px;
+        }
+
+        .input-container textarea {
+            padding: 14px 15px;
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .input-container input:hover { border-color: #a5c9a7; background: #f2f8f2; }
+        .input-container input:focus { border-color: var(--input-focus); background: #fff; box-shadow: 0 0 0 3.5px rgba(46,125,50,0.12); }
+        .input-container:focus-within .field-icon { color: var(--primary-green); }
+        
+        /* Password toggle */
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #a0aec0;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 8px;
+            transition: color 0.3s ease;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .password-toggle:hover {
+            color: var(--primary-green);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .register-btn {
+            width: 100%; padding: 14px; border: none; border-radius: var(--radius-input);
+            background: linear-gradient(135deg, var(--light-green) 0%, var(--primary-green) 60%);
+            color: white; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.03em;
+            cursor: pointer; margin-top: 4px; box-shadow: 0 6px 20px rgba(46,125,50,0.28);
+            position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+        }
+        .register-btn::after { content: ''; position: absolute; top:0; left:-100%; width:60%; height:100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent); transform: skewX(-20deg); transition:left 0.5s; }
+        .register-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(46,125,50,0.38); filter: brightness(1.06); }
+        .register-btn:hover::after { left: 160%; }
+        .register-btn:active { transform: translateY(0); box-shadow: 0 4px 12px rgba(46,125,50,0.22); }
+
+        /* --- Google Sign-Up Button --- */
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 16px 20px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            color: #1e293b;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .google-btn:hover {
+            border-color: #4285F4;
+            background-color: #f8fafc;
+            box-shadow: 0 6px 16px rgba(66, 133, 244, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .google-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            margin-bottom: 20px;
+            color: var(--light-text);
+            font-size: 0.95em;
+        }
+
+        .login-link a {
+            color: var(--primary-green);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .login-link a:hover {
+            color: var(--light-green);
+            text-decoration: underline;
+        }
+
+        /* --- Right Side (Logo Section) --- */
+        .split-right {
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, #1b5e20 0%, var(--primary-green) 50%, var(--light-green) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Abstract Background shapes */
+        .split-right::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: -10%;
+            width: 70%;
+            height: 70%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .split-right::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            right: -10%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .logo-container {
+            text-align: center;
+            z-index: 2;
+            color: white;
+            position: relative;
+            animation: fadeInScale 1s ease-out forwards;
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .logo-circle {
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .logo-circle::after {
+            content: '';
+            position: absolute;
+            top: -10px; left: -10px; right: -10px; bottom: -10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0));
+            z-index: -1;
+            filter: blur(20px);
+        }
+        
+        .logo-circle .icon {
+            font-size: 80px;
+            color: var(--accent-orange);
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+            margin-bottom: 10px;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); filter: drop-shadow(0 15px 15px rgba(0,0,0,0.2)); }
+            50% { transform: translateY(-12px) rotate(2deg); filter: drop-shadow(0 25px 20px rgba(0,0,0,0.15)); }
+            100% { transform: translateY(0px) rotate(0deg); filter: drop-shadow(0 15px 15px rgba(0,0,0,0.2)); }
+        }
+
+        .icon-3d {
+            width: 140px;
+            height: 140px;
+            animation: float 4s ease-in-out infinite;
+            margin-bottom: 10px;
+        }
+        
+        .logo-text {
+            display: block;
+            font-size: 2em;
+            font-weight: 800;
+            color: white;
+            margin-top: 30px;
+            letter-spacing: 4px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tagline {
+            display: block;
+            margin-top: 10px;
+            font-size: 1em;
+            opacity: 0.8;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .error-message {
+            color: #e53e3e;
+            font-size: 0.85em;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #fff5f5;
+            border-left: 4px solid #e53e3e;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .success-message {
+            color: #2e7d32;
+            font-size: 0.85em;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f1f8f4;
+            border-left: 4px solid #2e7d32;
+            border-radius: 4px;
+            display: none;
+        }
+
+        /* Responsive Design - Enhanced */
+        @media (max-width: 1024px) {
+            .split-left, .split-right {
+                width: 50%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+            }
+            .split-left, .split-right {
+                width: 100%;
+                height: auto;
+            }
+            .split-right {
+                min-height: 150px;
+                padding: 1.5rem 1rem;
+                order: -1;
+            }
+            .split-left {
+                flex: 1;
+                border-top-left-radius: 30px;
+                border-top-right-radius: 30px;
+                margin-top: -30px;
+                padding: 0.5rem 0 2rem 0;
+            }
+            .register-wrapper {
+                padding: 20px 15px;
+                max-width: 100%;
+            }
+            .header-text {
+                margin-bottom: 20px;
+                margin-top: 15px;
+            }
+            .header-text h1 {
+                font-size: 1.6rem;
+            }
+            .logo-circle {
+                width: 80px;
+                height: 80px;
+            }
+            .logo-circle .icon,
+            .logo-circle img,
+            .logo-circle .icon-3d {
+                font-size: 40px;
+                width: 40px;
+                height: 40px;
+            }
+            .logo-text {
+                font-size: 1.1rem;
+                margin-top: 10px;
+                letter-spacing: 2px;
+            }
+            .tagline {
+                font-size: 0.8rem;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-group {
+                margin-bottom: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .split-right {
+                min-height: 120px;
+                padding: 1rem;
+            }
+            .logo-circle {
+                width: 70px;
+                height: 70px;
+            }
+            .logo-circle .icon,
+            .logo-circle img,
+            .logo-circle .icon-3d {
+                width: 35px;
+                height: 35px;
+            }
+            .register-wrapper {
+                padding: 15px 12px;
+            }
+            .header-text h1 {
+                font-size: 1.4rem;
+            }
+            .header-text p {
+                font-size: 0.85rem;
+            }
+            .form-group label {
+                font-size: 0.85rem;
+            }
+            .input-container input,
+            .input-container textarea {
+                padding: 12px 40px;
+                font-size: 0.9rem;
+            }
+            .input-container textarea {
+                padding: 12px;
+                min-height: 60px;
+            }
+            .register-btn {
+                padding: 14px;
+                font-size: 0.95rem;
+            }
+            .login-link {
+                font-size: 0.85rem;
+            }
+        }
+
+    </style>
+</head>
+<body class="auth-page">
+
+    <div class="split-left">
+        <div class="register-wrapper">
+            <div class="form-brand">
+                <div class="form-brand-icon">
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;">
+                        <defs>
+                            <radialGradient id="fl-cap2" cx="30%" cy="30%" r="60%">
+                                <stop offset="0%" stop-color="#ff8a65"/>
+                                <stop offset="100%" stop-color="#bf360c"/>
+                            </radialGradient>
+                        </defs>
+                        <path d="M25,100 C25,30 65,15 100,15 C135,15 175,30 175,100 C175,115 135,125 100,125 C65,125 25,115 25,100 Z" fill="url(#fl-cap2)"/>
+                    </svg>
+                </div>
+                <span class="form-brand-name">KABUTOMATE</span>
+            </div>
+            <div class="header-text">
+                <h1>Create Account</h1>
+                <p>Join Kabutomate to start shopping fresh mushrooms.</p>
+            </div>
+            
+            <div id="error-message" class="error-message"></div>
+            <div id="success-message" class="success-message"></div>
+            
+            <form id="register-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first_name">First Name</label>
+                        <div class="input-container">
+                            <input type="text" id="first_name" name="first_name" placeholder="John" required>
+                            <i class="fa-solid fa-user field-icon"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last Name</label>
+                        <div class="input-container">
+                            <input type="text" id="last_name" name="last_name" placeholder="Doe" required>
+                            <i class="fa-solid fa-user field-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Username <span style="color: red;">*</span></label>
+                    <div class="input-container">
+                        <input type="text" id="username" name="username" placeholder="Choose a username" required>
+                        <i class="fa-regular fa-user field-icon"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email <span style="color: red;">*</span></label>
+                    <div class="input-container">
+                        <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+                        <i class="fa-regular fa-envelope field-icon"></i>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Password <span style="color: red;">*</span></label>
+                        <div class="input-container">
+                            <input type="password" id="password" name="password" placeholder="••••••••" required>
+                            <i class="fa-solid fa-lock field-icon"></i>
+                            <button type="button" class="password-toggle" onclick="togglePassword('password', this)">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm Password <span style="color: red;">*</span></label>
+                        <div class="input-container">
+                            <input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••" required>
+                            <i class="fa-solid fa-lock field-icon"></i>
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirm_password', this)">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <div class="input-container">
+                        <input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567">
+                        <i class="fa-solid fa-phone field-icon"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <div class="input-container">
+                        <textarea id="address" name="address" placeholder="Street address"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <div class="input-container">
+                            <input type="text" id="city" name="city" placeholder="Your city">
+                            <i class="fa-solid fa-location-dot field-icon"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="postal_code">Postal Code</label>
+                        <div class="input-container">
+                            <input type="text" id="postal_code" name="postal_code" placeholder="12345">
+                            <i class="fa-solid fa-location-dot field-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="register-btn">Create Account</button>
+            </form>
+            
+            <!-- Divider -->
+            <div style="display: flex; align-items: center; margin: 20px 0; gap: 10px;">
+                <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
+                <span style="color: #94a3b8; font-size: 0.85rem;">or sign up with</span>
+                <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
+            </div>
+            
+            <!-- Google Sign-Up Button -->
+            <a href="/accounts/google/login/?process=login" class="google-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Sign up with Google
+            </a>
+            
+            <div class="login-link">
+                Already have an account? <a href="{% url 'login' %}">Sign in here</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="split-right">
+        <div class="logo-container">
+            <div class="logo-circle">
+                <svg class="icon-3d" viewBox="0 0 200 200" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="cap-light" cx="30%" cy="30%" r="60%">
+                            <stop offset="0%" stop-color="#ff8a65" />
+                            <stop offset="50%" stop-color="#f4511e" />
+                            <stop offset="100%" stop-color="#bf360c" />
+                        </radialGradient>
+                        <linearGradient id="cap-bottom" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#872204" />
+                            <stop offset="100%" stop-color="#3e1002" />
+                        </linearGradient>
+                        <linearGradient id="stem-shade" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#fdfbfb" />
+                            <stop offset="25%" stop-color="#f1f2f6" />
+                            <stop offset="80%" stop-color="#dcdde1" />
+                            <stop offset="100%" stop-color="#7f8fa6" />
+                        </linearGradient>
+                        <linearGradient id="stem-drop" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="rgba(0,0,0,0.6)" />
+                            <stop offset="100%" stop-color="transparent" />
+                        </linearGradient>
+                        <radialGradient id="cast-shadow" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="rgba(0,0,0,0.4)" />
+                            <stop offset="100%" stop-color="transparent" />
+                        </radialGradient>
+                    </defs>
+                    <ellipse cx="100" cy="180" rx="60" ry="12" fill="url(#cast-shadow)" />
+                    <path d="M85,100 C80,140 75,170 85,175 C95,180 110,180 115,175 C125,170 120,140 115,100 Z" fill="url(#stem-shade)" />
+                    <path d="M85,100 C95,110 110,110 115,100 C115,115 85,115 85,100 Z" fill="url(#stem-drop)" />
+                    <ellipse cx="100" cy="100" rx="75" ry="25" fill="url(#cap-bottom)" />
+                    <path d="M25,100 C25,30 65,15 100,15 C135,15 175,30 175,100 C175,115 135,125 100,125 C65,125 25,115 25,100 Z" fill="url(#cap-light)" />
+                    <ellipse cx="65" cy="55" rx="14" ry="9" fill="#fff" opacity="0.9" transform="rotate(-15 65 55)" />
+                    <ellipse cx="130" cy="65" rx="16" ry="10" fill="#fff" opacity="0.85" transform="rotate(20 130 65)" />
+                    <ellipse cx="95" cy="35" rx="9" ry="6" fill="#fff" opacity="0.9" />
+                    <ellipse cx="45" cy="85" rx="8" ry="14" fill="#fff" opacity="0.75" transform="rotate(-25 45 85)" />
+                    <ellipse cx="155" cy="95" rx="7" ry="12" fill="#fff" opacity="0.8" transform="rotate(25 155 95)" />
+                    <path d="M50,65 C60,40 90,25 110,25 C90,30 65,45 55,70 Z" fill="#fff" opacity="0.3" />
+                </svg>
+            </div>
+            <span class="logo-text">KABUTOMATE</span>
+            <span class="tagline">Smart Farming Solutions</span>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            const icon = button.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            const registerForm = document.getElementById("register-form");
+            const errorMessage = document.getElementById("error-message");
+            const successMessage = document.getElementById("success-message");
+            
+            registerForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                
+                // Hide previous messages
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'none';
+                
+                // Get form data
+                const formData = {
+                    username: document.getElementById("username").value,
+                    email: document.getElementById("email").value,
+                    password: document.getElementById("password").value,
+                    confirm_password: document.getElementById("confirm_password").value,
+                    first_name: document.getElementById("first_name").value,
+                    last_name: document.getElementById("last_name").value,
+                    phone: document.getElementById("phone").value,
+                    address: document.getElementById("address").value,
+                    city: document.getElementById("city").value,
+                    postal_code: document.getElementById("postal_code").value,
+                };
+                
+                // Get CSRF token
+                const csrfToken = document.cookie
+                    .split('; ')
+                    .find(row => row.startsWith('csrftoken='))
+                    ?.split('=')[1];
+
+                try {
+                    const response = await fetch('/register/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        successMessage.textContent = data.message;
+                        successMessage.style.display = 'block';
+                        
+                        // Redirect to shop after a short delay
+                        setTimeout(() => {
+                            window.location.href = data.redirect_url;
+                        }, 1500);
+                    } else {
+                        errorMessage.textContent = data.error;
+                        errorMessage.style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error("Registration error:", error);
+                    errorMessage.textContent = "An error occurred. Please try again.";
+                    errorMessage.style.display = 'block';
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
