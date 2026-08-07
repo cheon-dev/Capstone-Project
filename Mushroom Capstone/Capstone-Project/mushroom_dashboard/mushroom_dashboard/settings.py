@@ -155,6 +155,7 @@ WSGI_APPLICATION = 'mushroom_dashboard.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASE_URL = os.getenv('DATABASE_URL')
+print(f"DEBUG: DATABASE_URL is set: {bool(DATABASE_URL)}, length: {len(DATABASE_URL) if DATABASE_URL else 0}")
 
 if DATABASE_URL:
     DATABASES = {
